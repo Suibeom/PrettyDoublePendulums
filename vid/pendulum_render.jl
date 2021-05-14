@@ -15,8 +15,8 @@ function init_angle_linspace_grid(
     θ_2s = zeros(Float64, size, size)
     for i = 1:size
         for j = 1:size
-            θ_1s[i, j] = angle(i)
-            θ_2s[i, j] = angle(j)
+            θ_1s[i, j] = angle(j)
+            θ_2s[i, j] = angle(i)
         end
     end
     return Pendulums.InitPendulums(θ_1s, θ_2s)
