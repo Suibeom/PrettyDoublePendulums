@@ -15,7 +15,7 @@ end
 
 # ╔═╡ 6f86bb34-b32e-11eb-060c-313ebd8c1ab0
 begin
-	using Colors, Images
+    using Colors, Images
     struct PendulumCollection{N}
         theta_1s::Array{Float64,N}
         d_theta_1s::Array{Float64,N}
@@ -88,27 +88,31 @@ begin
     end
     function get_color(theta, phi)
         return RGB(
-             0.5+ 0.5*sin(theta) * cos(phi),
-           0.5+ 0.5*sin(theta) * sin(phi),
-           0.5+ 0.5* cos(theta),
+            0.5 + 0.5 * sin(theta) * cos(phi),
+            0.5 + 0.5 * sin(theta) * sin(phi),
+            0.5 + 0.5 * cos(theta),
         )
     end
-	function get_fractal(pendulums::PendulumCollection{2})
-		return get_color.(pendulums.theta_1s, pendulums.theta_2s)
+    function get_fractal(pendulums::PendulumCollection{2})
+        return get_color.(pendulums.theta_1s, pendulums.theta_2s)
     end
-	function init_angle_linspace_grid(size::Int, min_angle::Float64, max_angle::Float64)::PendulumCollection{2}
-		grid_mesh::Float64 = 1/size
-		angle(k) = (max_angle - min_angle) * grid_mesh * k + min_angle
-		theta_1s = zeros(Float64, size,size)
-		theta_2s = zeros(Float64, size, size)
-		for i in 1:size
-			for j in 1:size
-				theta_1s[i,j] = angle(i)
-				theta_2s[i,j] = angle(j)
-			end
-		end
-		return InitPendulums(theta_1s, theta_2s)
-	end
+    function init_angle_linspace_grid(
+        size::Int,
+        min_angle::Float64,
+        max_angle::Float64,
+    )::PendulumCollection{2}
+        grid_mesh::Float64 = 1 / size
+        angle(k) = (max_angle - min_angle) * grid_mesh * k + min_angle
+        theta_1s = zeros(Float64, size, size)
+        theta_2s = zeros(Float64, size, size)
+        for i = 1:size
+            for j = 1:size
+                theta_1s[i, j] = angle(j)
+                theta_2s[i, j] = angle(i)
+            end
+        end
+        return InitPendulums(theta_1s, theta_2s)
+    end
 
 
 
@@ -123,23 +127,23 @@ pendulums = init_angle_linspace_grid(1000, Float64(-π), Float64(π))
 
 # ╔═╡ 9a160d4a-d44c-49af-99bc-ad8d36b8f49a
 begin
-	frames = []
-	pendulum_next = pendulums
-	for i in 0:frame_count
-		push!(frames, get_fractal(pendulum_next))
-		pendulum_next = step(pendulum_next, 0.05)
-	end
+@bind frame_count html"<input type='number' value='15'>"
+
+# ╔═╡ 9a160d4a-d44c-49af-99bc-ad8d36b8f49a
+begin
+    frames = []
+    pendulum_next = pendulums
+    for i = 0:frame_count
+        push!(frames, get_fractal(pendulum_next))
+        pendulum_next = step(pendulum_next, 0.05)
+    end
 end
 
 # ╔═╡ 62cbd3df-54ea-428c-905a-d84837f9e57e
-@bind frame HTML("<input type='range' value='1' min='1' max='"*string(frame_count)*"'>")
+@bind frame HTML("<input type='range' value='1' min='1' max='" * string(frame_count) * "'>")
 
 # ╔═╡ eb20c155-b742-4f41-9bf4-45767edfd75e
 frames[min(frame, frame_count)]
-
-# ╔═╡ Cell order:
-# ╠═6f86bb34-b32e-11eb-060c-313ebd8c1ab0
-# ╠═77bfd02b-c70f-4eec-858d-d34e5701a5c0
 # ╠═c070b2ea-4e1d-40b3-8447-69d4b15990f7
 # ╠═9a160d4a-d44c-49af-99bc-ad8d36b8f49a
 # ╠═62cbd3df-54ea-428c-905a-d84837f9e57e
